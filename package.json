@@ -18,5 +18,8 @@
   "homepage": "https://github.com/kcbryan10/challenge-10#readme",
   "dependencies": {
     "inquirer": "^8.2.0"
+  },
+  "devDependencies": {
+    "jest": "^27.3.1"
   }
 }
