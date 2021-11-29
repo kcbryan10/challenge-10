@@ -3,7 +3,11 @@ const fs = require("fs");
 const manager = require("./lib/Manager");
 const Engineer = require("./lib/Engineer");
 const Intern = require("./lib/intern");
-const generateHTML = require("./src/generateHTML")
+const generateHTML = require("./src/generateHTML");
+const manager = require("./lib/Manager");
+const engineer = require("./lib/Engineer");
+const intern = require("./lib/intern");
+const teamArray = [];
 
 const addManager = () => {
     return inquirer.prompt ([
@@ -60,6 +64,13 @@ const addManager = () => {
             }
         }
     ])
+    .then (inputManager => {
+        const {name, id, email, officenumber} = inputManager;
+        const manager = new manager (name, id, email, officenumber);
+
+        teamArray.push (manager);
+        console.log(manager);
+    })
 }
 
 const addEmployee= () => {
@@ -136,5 +147,43 @@ const addEmployee= () => {
             }
         },
     ])
+    .then (inputEmployee => {
+        let {name, id, email, role, github, school} = inputEmployee;
+        let employee;
+        if (role === "engineer") {
+            employee = new engineer (name, id, email, github);
+
+            console.log(employee);
+        } else if (role === "intern") {
+            employee = new intern (name, id, email, school);
+
+            console.log(employee);
+        }
+
+        teamArray.push(employee);
+    })
 }
+
+const writeFile = data => {
+    fs.writeFile("./src/index.html". data, err => {
+        if (err) {
+            console.log(err);
+            return;
+        } else {
+            console.log ("employee has been added succesfully.")
+        }
+    })
+}
+
+addManager()
+    .then(addEmployee)
+    .then(teamArray => {
+        return generateHTML(teamArray);
+    })
+    .then (outlineHTML => {
+        return writeFile(outlineHTML);
+    })
+    .catch(err => {
+        console.log(err)
+    });
 
